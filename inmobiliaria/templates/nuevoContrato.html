@@ -1,0 +1,80 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <br>
+            <h1><b>Registrar Nuevo Contrato</b></h1>
+            <hr>
+            <form id="form_nuevo_contrato" action="/guardarContrato/" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <b>Propiedad:</b>
+                <select name="propiedad_id" class="form-control" required>
+                    <option value="">Seleccione una propiedad...</option>
+                    {% for p in propiedades %}
+                        <option value="{{ p.id }}">{{ p.titulo }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+
+                <b>Inquilino:</b>
+                <input required minlength="3" placeholder="Nombre completo del inquilino" class="form-control" type="text" name="inquilino">
+                <br>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <b>Fecha de Firma:</b>
+                        <input required class="form-control" type="date" name="fecha_firma">
+                    </div>
+                    <div class="col-md-6">
+                        <b>Fecha de Vencimiento:</b>
+                        <input required class="form-control" type="date" name="fecha_vencimiento">
+                    </div>
+                </div>
+                <br>
+
+                <b>Plazo (meses):</b>
+                <input required min="1" class="form-control" type="number" name="plazo_meses">
+                <br>
+
+                <b>Archivo PDF del Contrato:</b>
+                <input type="file" name="archivo_pdf" class="form-control" accept="application/pdf" required>
+                <br>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="aval_requerido" id="aval_requerido">
+                    <label class="form-check-label" for="aval_requerido">¿Requiere Aval?</label>
+                </div>
+                <br>
+
+                <button class="btn btn-success" type="submit">
+                    <i class="icon-save"></i> Guardar Contrato
+                </button>
+                <a href="/listarContratos/" style="margin-left: 10px; text-decoration: underline;">
+                    <i class="icon-cancel"></i> Cancelar
+                </a>
+                <br><br>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#form_nuevo_contrato").validate({
+        rules: {
+            propiedad_id: { required: true },
+            inquilino: { required: true, minlength: 3 },
+            fecha_firma: { required: true },
+            fecha_vencimiento: { required: true },
+            plazo_meses: { required: true, min: 1 },
+            archivo_pdf: { required: true }
+        },
+        messages: {
+            inquilino: { minlength: "El nombre es demasiado corto" },
+            plazo_meses: { min: "El plazo debe ser al menos 1 mes" }
+        }
+    });
+</script>
+{% endblock %}
