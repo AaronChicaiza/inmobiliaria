@@ -1,0 +1,13 @@
+<h1>Dashboard Inmobiliaria</h1>
+
+{% if rol == "admin" %}
+    <h2>Bienvenido ADMIN 👨‍💼</h2>
+    <p>Tienes control total del sistema</p>
+
+{% elif rol == "agente" %}
+    <h2>Bienvenido AGENTE 🧑‍💻</h2>
+    <p>Puedes gestionar propiedades</p>
+{% endif %}
+
+<br>
+<a href="/logout/">Cerrar sesión</a>
