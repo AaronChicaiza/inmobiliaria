@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from .models import Perfil, Propiedad, Contrato
+from datetime import date, timedelta
+from django.contrib import messages
 
 
 # -------------------------
@@ -219,3 +221,16 @@ def eliminarContrato(request, id):
     contrato = Contrato.objects.get(id=id)
     contrato.delete()
     return redirect('listarContratos')
+
+@login_required
+def contratosPorVencer(request):
+    # Definimos hoy y la fecha límite (dentro de 30 días)
+    hoy = date.today()
+    fecha_limite = hoy + timedelta(days=30)
+    
+    # Filtramos: fecha_vencimiento debe estar entre hoy y la fecha_limite
+    contratos = Contrato.objects.filter(
+        fecha_vencimiento__range=[hoy, fecha_limite]
+    )
+    
+    return render(request, 'contratosPorVencer.html', {'contratos': contratos})
