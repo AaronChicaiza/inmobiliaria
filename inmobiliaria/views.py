@@ -106,8 +106,8 @@ def guardarPropiedad(request):
         estacionamiento='estacionamiento' in request.POST
     )
 
+    messages.success(request, "Propiedad creada correctamente")
     return redirect('listarPropiedades')
-
 
 @login_required
 def editarPropiedad(request, id):
@@ -138,16 +138,17 @@ def actualizarPropiedad(request):
 
     propiedad.save()
 
+    messages.success(request, "Propiedad actualizada correctamente")
     return redirect('listarPropiedades')
 
 
 @login_required
 def eliminarPropiedad(request, id):
-    propiedad = Propiedad.objects.get(id=id)
+    propiedad = get_object_or_404(Propiedad, id=id)
     propiedad.delete()
 
+    messages.success(request, "Propiedad eliminada correctamente")
     return redirect('listarPropiedades')
-
 # -------------------------
 # CONTRATOS
 # -------------------------

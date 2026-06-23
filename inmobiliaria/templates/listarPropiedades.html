@@ -52,12 +52,11 @@
                             Editar
                         </a>
 
-                        <a href="{% url 'eliminarPropiedad' propiedad.id %}"
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('¿Seguro que deseas eliminar esta propiedad?');">
+                        <a href="#" 
+                            onclick="confirmDelete(event, this.href='{% url 'eliminarPropiedad' propiedad.id %}')"
+                            class="btn btn-danger btn-sm">
                             Eliminar
                         </a>
-
                     </div>
 
                 </div>
@@ -79,5 +78,26 @@
     {% endif %}
 
 </div>
+
+<script>
+function confirmDelete(event, url) {
+    event.preventDefault();
+
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción no se puede deshacer",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+</script>
 
 {% endblock %}
