@@ -1,0 +1,31 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+<div class="container mt-4">
+    <h1><b>Contratos por Vencer (Próximos 30 días)</b></h1>
+    <hr>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Inquilino</th>
+                <th>Fecha Vencimiento</th>
+                <th>Propiedad</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in contratos %}
+            <tr class="table-warning">
+                <td>{{ c.inquilino }}</td>
+                <td><b>{{ c.fecha_vencimiento }}</b></td>
+                <td>{{ c.propiedad.titulo }}</td>
+                <td>
+                    <a href="/editarContrato/{{c.id}}" class="btn btn-sm btn-warning">Gestionar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center">No hay contratos por vencer pronto.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
