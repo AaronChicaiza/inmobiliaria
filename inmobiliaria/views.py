@@ -146,3 +146,76 @@ def eliminarPropiedad(request, id):
     propiedad.delete()
 
     return redirect('listarPropiedades')
+
+# -------------------------
+# CONTRATOS
+# -------------------------
+
+@login_required
+def listarContratos(request):
+    contratos = Contrato.objects.all()
+    return render(
+        request, 
+        'listarContratos.html', 
+        {'contratos': contratos}
+    )
+
+@login_required
+def nuevoContrato(request):
+    propiedades = Propiedad.objects.all()
+    return render(
+        request, 
+        'nuevoContrato.html', 
+        {'propiedades': propiedades}
+    )
+
+@login_required
+def guardarContrato(request):
+    propiedad = Propiedad.objects.get(id=request.POST['propiedad_id'])
+    
+    Contrato.objects.create(
+        propiedad=propiedad,
+        inquilino=request.POST['inquilino'],
+        archivo_pdf=request.FILES.get('archivo_pdf'),
+        fecha_firma=request.POST['fecha_firma'],
+        fecha_vencimiento=request.POST['fecha_vencimiento'],
+        plazo_meses=request.POST['plazo_meses'],
+        aval_requerido='aval_requerido' in request.POST,
+        creado_por=request.user
+    )
+    
+    return redirect('listarContratos')
+
+@login_required
+def editarContrato(request, id):
+    contrato = Contrato.objects.get(id=id)
+    propiedades = Propiedad.objects.all()
+    return render(
+        request, 
+        'editarContrato.html', 
+        {'contrato': contrato, 'propiedades': propiedades}
+    )
+
+@login_required
+def actualizarContrato(request):
+    contrato = Contrato.objects.get(id=request.POST['id'])
+    
+    contrato.propiedad = Propiedad.objects.get(id=request.POST['propiedad_id'])
+    contrato.inquilino = request.POST['inquilino']
+    contrato.fecha_firma = request.POST['fecha_firma']
+    contrato.fecha_vencimiento = request.POST['fecha_vencimiento']
+    contrato.plazo_meses = request.POST['plazo_meses']
+    contrato.aval_requerido = 'aval_requerido' in request.POST
+    
+    archivo = request.FILES.get('archivo_pdf')
+    if archivo:
+        contrato.archivo_pdf = archivo
+        
+    contrato.save()
+    return redirect('listarContratos')
+
+@login_required
+def eliminarContrato(request, id):
+    contrato = Contrato.objects.get(id=id)
+    contrato.delete()
+    return redirect('listarContratos')
