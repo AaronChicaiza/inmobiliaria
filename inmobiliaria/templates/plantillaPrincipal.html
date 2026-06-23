@@ -91,17 +91,103 @@
         {% block contenido %}
         {% endblock %}
     </main>
+<footer class="ftco-footer ftco-section">
+  <div class="container-fluid px-md-5">
+    <div class="row mb-5">
 
-    <!-- Footer -->
-    <footer class="ftco-footer ftco-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <p>Sistema de Gestión Inmobiliaria ACCR</p>
-                </div>
-            </div>
+      <!-- LOGO / DESCRIPCIÓN -->
+      <div class="col-md">
+        <div class="ftco-footer-widget mb-4">
+          <h2 class="ftco-heading-2">Inmobiliaria Gestión</h2>
+          <p>Plataforma de gestión de propiedades, contratos y alquileres en tiempo real.</p>
+
+          <ul class="ftco-footer-social list-unstyled mt-5">
+            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+          </ul>
         </div>
-    </footer>
+      </div>
+
+      <!-- PROPIEDADES -->
+      <div class="col-md">
+        <div class="ftco-footer-widget mb-4 ml-md-4">
+          <h2 class="ftco-heading-2">Propiedades</h2>
+          <ul class="list-unstyled">
+            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Ver propiedades</a></li>
+            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Registrar propiedad</a></li>
+            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Propiedades en renta</a></li>
+            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Propiedades en venta</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CONTRATOS -->
+      <div class="col-md">
+        <div class="ftco-footer-widget mb-4 ml-md-4">
+          <h2 class="ftco-heading-2">Contratos</h2>
+          <ul class="list-unstyled">
+            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Registrar contrato</a></li>
+            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Contratos activos</a></li>
+            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Contratos por vencer</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- USUARIOS / ROLES -->
+      <div class="col-md">
+        <div class="ftco-footer-widget mb-4">
+          <h2 class="ftco-heading-2">Sistema</h2>
+          <ul class="list-unstyled">
+            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Perfil de usuario</a></li>
+            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Panel {% if rol %}{{ rol }}{% endif %}</a></li>
+            <li><a href="/logout/"><span class="icon-long-arrow-right mr-2"></span>Cerrar sesión</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CONTACTO -->
+      <div class="col-md">
+        <div class="ftco-footer-widget mb-4">
+          <h2 class="ftco-heading-2">Contacto</h2>
+          <div class="block-23 mb-3">
+            <ul>
+              <li>
+                <span class="icon icon-map-marker"></span>
+                <span class="text">Latacunga, Cotopaxi, Ecuador</span>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="icon icon-phone"></span>
+                  <span class="text">+593 999 999 999</span>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="icon icon-envelope pr-4"></span>
+                  <span class="text">inmobiliaria@email.com</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COPYRIGHT -->
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <p>
+          Copyright &copy;
+          <script>document.write(new Date().getFullYear());</script>
+          Inmobiliaria Gestión | Sistema de Alquileres y Propiedades
+        </p>
+      </div>
+    </div>
+
+  </div>
+</footer>
 
     <!-- Scripts -->
     <script src="{% static 'js/jquery.min.js' %}"></script>
