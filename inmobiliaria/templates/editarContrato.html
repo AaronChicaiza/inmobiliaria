@@ -1,0 +1,80 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <br>
+                <h1><b>Actualizar Contrato</b></h1>
+                <hr>
+                <form enctype="multipart/form-data" id="form_editar_contrato" action="/actualizarContrato/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ contrato.id }}">
+                    
+                    <b>Propiedad:</b>
+                    <select name="propiedad_id" class="form-control" required>
+                        {% for p in propiedades %}
+                            <option value="{{ p.id }}" {% if p.id == contrato.propiedad.id %}selected{% endif %}>
+                                {{ p.titulo }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <br>
+
+                    <b>Inquilino:</b>
+                    <input value="{{ contrato.inquilino }}" required class="form-control" type="text" name="inquilino">
+                    <br>
+
+                    <b>Fecha de Firma:</b>
+                    <input value="{{ contrato.fecha_firma|date:'Y-m-d' }}" required class="form-control" type="date" name="fecha_firma">
+                    <br>
+
+                    <b>Fecha de Vencimiento:</b>
+                    <input value="{{ contrato.fecha_vencimiento|date:'Y-m-d' }}" required class="form-control" type="date" name="fecha_vencimiento">
+                    <br>
+
+                    <b>Plazo (meses):</b>
+                    <input value="{{ contrato.plazo_meses }}" required class="form-control" type="number" name="plazo_meses">
+                    <br>
+
+                    <b>¿Requiere Aval?</b>
+                    <input type="checkbox" name="aval_requerido" {% if contrato.aval_requerido %}checked{% endif %}>
+                    <br><br>
+
+                    <b>Archivo Actual:</b>
+                    <br>
+                    {% if contrato.archivo_pdf %}
+                        <a href="{{ contrato.archivo_pdf.url }}" target="_blank" class="btn btn-sm btn-info">Ver PDF Actual</a>
+                    {% else %}
+                        <b>N/A</b>
+                    {% endif %}
+
+                    <br><br>
+                    <b>Cambiar Archivo PDF:</b>
+                    <input type="file" name="archivo_pdf" class="form-control" accept="application/pdf">
+                    <br>
+                        
+                    <button class="btn btn-success" type="submit"> 
+                        <i class="icon-edit"></i> Actualizar
+                    </button>
+                    <a href="/listarContratos/" style="margin-left: 10px; text-decoration: underline;">
+                        <i class="icon-cancel"></i> Cancelar
+                    </a>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("#form_editar_contrato").validate({
+            rules:{
+                inquilino: { required: true, minlength: 3 },
+                plazo_meses: { required: true, min: 1 }
+            },
+            messages:{
+                inquilino: { required: "Ingrese el nombre del inquilino" },
+                plazo_meses: { min: "El plazo debe ser mayor a 0" }
+            }
+        });
+    </script>
+{% endblock %}
