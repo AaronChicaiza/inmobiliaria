@@ -1,4 +1,4 @@
-{% extends "./plantillaPrincipal.html" %}
+{% extends "plantillaPrincipal.html" %}
 {% load static %}
 
 {% block contenido %}
@@ -20,6 +20,12 @@
                             Iniciar Sesión
                         </h2>
 
+                        {% if error %}
+                        <div class="alert alert-danger text-center" role="alert">
+                            {{ error }}
+                        </div>
+                        {% endif %}
+
                         <form method="post">
                             {% csrf_token %}
 
@@ -27,21 +33,24 @@
                                 <label>Usuario</label>
                                 <input type="text"
                                        name="username"
-                                       class="form-control">
+                                       class="form-control"
+                                       placeholder="Tu usuario"
+                                       required>
                             </div>
 
                             <div class="form-group">
                                 <label>Contraseña</label>
                                 <input type="password"
                                        name="password"
-                                       class="form-control">
+                                       class="form-control"
+                                       placeholder="Tu contraseña"
+                                       required>
                             </div>
 
                             <button type="submit"
                                     class="btn btn-primary btn-block">
                                 Ingresar
                             </button>
-
                         </form>
 
                     </div>
