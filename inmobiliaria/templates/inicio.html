@@ -1,13 +1,48 @@
-<h1>Dashboard Inmobiliaria</h1>
+{% extends "./plantillaPrincipal.html" %}
 
-{% if rol == "admin" %}
-    <h2>Bienvenido ADMIN 👨‍💼</h2>
-    <p>Tienes control total del sistema</p>
+{% block contenido %}
 
-{% elif rol == "agente" %}
-    <h2>Bienvenido AGENTE 🧑‍💻</h2>
-    <p>Puedes gestionar propiedades</p>
-{% endif %}
+<section class="hero-wrap hero-wrap-2"
+         style="background-image: url('/static/images/bg_2.jpg'); height: 500px;">
+    <div class="overlay"></div>
 
-<br>
-<a href="/logout/">Cerrar sesión</a>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center"
+             style="height: 500px;">
+
+            <div class="col-md-9 text-center">
+
+                <h1 class="mb-3 text-white">
+                    Dashboard Inmobiliaria
+                </h1>
+
+                {% if rol == "admin" %}
+                    <h2 class="text-white">
+                        Bienvenido ADMIN 👨‍💼
+                    </h2>
+
+                    <p class="text-white">
+                        Tienes control total del sistema
+                    </p>
+
+                {% elif rol == "agente" %}
+                    <h2 class="text-white">
+                        Bienvenido AGENTE 🧑‍💻
+                    </h2>
+
+                    <p class="text-white">
+                        Puedes gestionar propiedades
+                    </p>
+                {% endif %}
+
+                <a href="/logout/" class="btn btn-primary">
+                    Cerrar sesión
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}
