@@ -1,0 +1,83 @@
+{% extends "./plantillaPrincipal.html" %}
+{% load static %}
+
+{% block contenido %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Listado de Propiedades</h2>
+
+        <a href="{% url 'nuevaPropiedad' %}" class="btn btn-success">
+            + Nueva Propiedad
+        </a>
+    </div>
+
+    {% if propiedades %}
+
+    <div class="row">
+
+        {% for propiedad in propiedades %}
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm">
+
+                {% if propiedad.foto %}
+                <img src="{{ propiedad.foto.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <img src="{% static 'images/default.jpg' %}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                        {{ propiedad.tipo }} - {{ propiedad.operacion }}
+                    </h5>
+
+                    <p class="card-text">
+                        <strong>Dirección:</strong> {{ propiedad.direccion }} <br>
+                        <strong>Precio:</strong> ${{ propiedad.precio }} <br>
+
+                        {% if propiedad.estacionamiento %}
+                            🚗 Con estacionamiento
+                        {% else %}
+                            🚫 Sin estacionamiento
+                        {% endif %}
+                    </p>
+
+                    <div class="d-flex justify-content-between">
+
+                        <a href="{% url 'editarPropiedad' propiedad.id %}" class="btn btn-primary btn-sm">
+                            Editar
+                        </a>
+
+                        <a href="{% url 'eliminarPropiedad' propiedad.id %}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('¿Seguro que deseas eliminar esta propiedad?');">
+                            Eliminar
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            No hay propiedades registradas.
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
