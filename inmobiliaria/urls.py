@@ -8,7 +8,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
 
     # Propiedades
-    path('propiedades/', views.listarPropiedades, name='listarPropiedades'),
+    path('listarPropiedades/', views.listarPropiedades, name='listarPropiedades'),
     path('nuevaPropiedad/', views.nuevaPropiedad, name='nuevaPropiedad'),
     path('guardarPropiedad/', views.guardarPropiedad, name='guardarPropiedad'),
     path('editarPropiedad/<int:id>/', views.editarPropiedad, name='editarPropiedad'),
