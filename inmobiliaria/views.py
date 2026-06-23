@@ -5,6 +5,7 @@ from django.db.models import Count
 from .models import Perfil, Propiedad, Contrato
 from datetime import date, timedelta
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 
 # -------------------------
@@ -110,7 +111,7 @@ def guardarPropiedad(request):
 
 @login_required
 def editarPropiedad(request, id):
-    propiedad = Propiedad.objects.get(id=id)
+    propiedad = get_object_or_404(Propiedad, id=id)
 
     return render(
         request,
@@ -122,19 +123,17 @@ def editarPropiedad(request, id):
 @login_required
 def actualizarPropiedad(request):
 
-    propiedad = Propiedad.objects.get(
-        id=request.POST['id']
-    )
+    propiedad = get_object_or_404(Propiedad, id=request.POST['id'])
 
     propiedad.direccion = request.POST['direccion']
     propiedad.tipo = request.POST['tipo']
     propiedad.operacion = request.POST['operacion']
-    propiedad.precio = request.POST['precio']
+    propiedad.precio = float(request.POST['precio'])
     propiedad.estacionamiento = 'estacionamiento' in request.POST
 
     nuevaFoto = request.FILES.get('foto')
 
-    if nuevaFoto:
+    if nuevaFoto and nuevaFoto.size > 0:
         propiedad.foto = nuevaFoto
 
     propiedad.save()

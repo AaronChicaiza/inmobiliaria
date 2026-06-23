@@ -10,6 +10,5 @@ urlpatterns = [
     path('', include('inmobiliaria.urls')),
 ]
 
-# 👇 ESTO ES LO QUE TE FALTA PARA LAS IMÁGENES
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
