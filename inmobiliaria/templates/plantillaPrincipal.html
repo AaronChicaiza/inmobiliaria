@@ -21,7 +21,6 @@
 </head>
 
 <body>
-
     <!-- Barra superior -->
     <div class="py-1 bg-black top">
         <div class="container">
@@ -59,6 +58,9 @@
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav nav ml-auto">
+                    <!-- NAVBAR ACTIVO AQUÍ -->
+
+                    
 
                     <li class="nav-item">
                         <a href="/" class="nav-link">Inicio</a>
@@ -72,12 +74,27 @@
                         <a href="/listarContratos/" class="nav-link">Contratos</a>
                     </li>
 
+                    <!-- 👨‍💼 SOLO ADMIN -->
+                    {% if rol|lower == "admin" %}
                     <li class="nav-item">
                         <a href="/reporteIngresos/" class="nav-link">Ingresos</a>
                     </li>
 
                     <li class="nav-item">
                         <a href="/reporteOcupacion/" class="nav-link">Ocupación</a>
+                    </li>
+                    {% endif %}
+
+                    <!-- 🧑‍💻 SOLO AGENTE -->
+                    {% if rol|lower == "agente" %}
+                    <li class="nav-item">
+                        <a href="/misPropiedades/" class="nav-link">Mis Propiedades</a>
+                    </li>
+                    {% endif %}
+
+                    <!-- 🚪 TODOS -->
+                    <li class="nav-item">
+                        <a href="/logout/" class="nav-link">Cerrar sesión</a>
                     </li>
 
                 </ul>

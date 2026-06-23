@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Perfil
+from django.db.models import Count
+from .models import Perfil, Propiedad, Contrato
 
 
 # -------------------------
@@ -24,7 +25,6 @@ def login_view(request):
                     "error": "Usuario sin rol asignado"
                 })
 
-            # TODO va al mismo inicio
             return redirect("inicio")
 
         return render(request, "login.html", {
@@ -52,6 +52,18 @@ def inicio(request):
     if not perfil:
         return redirect("login")
 
-    return render(request, "inicio.html", {
-        "rol": perfil.rol
-    })
+    propiedades = Propiedad.objects.all()
+    contratos = Contrato.objects.all()
+
+    context = {
+        "rol": perfil.rol,
+        "propiedades": propiedades,
+        "contratos": contratos,
+    }
+
+    # 🔥 SOLO ADMIN VE ESTADÍSTICAS
+    if perfil.rol == "admin":
+        context["total_propiedades"] = propiedades.count()
+        context["total_contratos"] = contratos.count()
+
+    return render(request, "inicio.html", context)
