@@ -60,15 +60,17 @@
                     <td>{{ propiedad.direccion }}</td>
 
                     <td>${{ propiedad.precio }}</td>
-
                     <td class="text-center">
                         {% if propiedad.estacionamiento %}
-                            🚗 Sí
+                            <span class="text-success font-weight-bold">
+                                <i class="icon-car"></i> Sí
+                            </span>
                         {% else %}
-                            🚫 No
+                            <span class="text-danger font-weight-bold">
+                                <i class="icon-car"></i> No
+                            </span>
                         {% endif %}
                     </td>
-
                     <td class="text-center">
 
                         <a href="{% url 'editarPropiedad' propiedad.id %}"

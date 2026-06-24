@@ -3,103 +3,165 @@
 
 {% block contenido %}
 
-<div class="container mt-4">
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
 
-    <h2 class="mb-4">
-        Registrar Nueva Propiedad
-    </h2>
+        <div class="col-md-6">
+            <br>
 
-    <form
-        action="{% url 'guardarPropiedad' %}"
-        method="POST"
-        enctype="multipart/form-data"
-    >
-        {% csrf_token %}
+            <h1><b>Registrar Nueva Propiedad</b></h1>
+            <hr>
 
-        <div class="mb-3">
-            <label>Dirección</label>
-            <input
-                type="text"
-                class="form-control"
-                name="direccion"
-                required
+            <form
+                enctype="multipart/form-data"
+                id="form_nueva_propiedad"
+                action="{% url 'guardarPropiedad' %}"
+                method="POST"
             >
+                {% csrf_token %}
+
+                <!-- DIRECCIÓN -->
+                <b>Dirección:</b>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="direccion"
+                    required
+                >
+                <br>
+
+                <!-- TIPO -->
+                <b>Tipo:</b>
+                <select class="form-control" name="tipo" required>
+                    <option value="">Seleccione</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Departamento">Departamento</option>
+                    <option value="Local">Local</option>
+                </select>
+                <br>
+
+                <!-- OPERACIÓN -->
+                <b>Operación:</b>
+                <select class="form-control" name="operacion" required>
+                    <option value="">Seleccione</option>
+                    <option value="Renta">Renta</option>
+                    <option value="Venta">Venta</option>
+                </select>
+                <br>
+
+                <!-- PRECIO -->
+                <b>Precio:</b>
+                <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    name="precio"
+                    required
+                >
+                <br>
+
+                <!-- FOTO -->
+                <b>Fotografía:</b>
+                <input
+                    type="file"
+                    class="form-control"
+                    name="foto"
+                    id="foto"
+                    accept="image/*"
+                    required
+                >
+                <br>
+
+                <!-- ESTACIONAMIENTO -->
+                <b>Estacionamiento:</b>
+                <input
+                    type="checkbox"
+                    name="estacionamiento"
+                    id="estacionamiento"
+                >
+                <br><br>
+
+                <!-- BOTÓN -->
+                <button type="submit" class="btn btn-primary">
+                    <i class="icon-save"></i> Guardar
+                </button>
+
+                <a href="/listarPropiedades/" style="margin-left: 10px; text-decoration: underline;">
+                    <i class="icon-close"></i> Cancelar
+                </a>
+
+                <br><br>
+            </form>
         </div>
-
-        <div class="mb-3">
-            <label>Tipo</label>
-            <select
-                class="form-control"
-                name="tipo"
-                required
-            >
-                <option value="">Seleccione</option>
-                <option value="Casa">Casa</option>
-                <option value="Departamento">Departamento</option>
-                <option value="Local">Local</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label>Operación</label>
-            <select
-                class="form-control"
-                name="operacion"
-                required
-            >
-                <option value="">Seleccione</option>
-                <option value="Renta">Renta</option>
-                <option value="Venta">Venta</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label>Precio</label>
-            <input
-                type="number"
-                step="0.01"
-                class="form-control"
-                name="precio"
-                required
-            >
-        </div>
-
-        <div class="mb-3">
-            <label>Fotografía</label>
-            <input
-                type="file"
-                class="form-control"
-                name="foto"
-                accept="image/*"
-                required
-            >
-        </div>
-
-        <div class="form-check mb-3">
-            <input
-                class="form-check-input"
-                type="checkbox"
-                name="estacionamiento"
-                id="estacionamiento"
-            >
-
-            <label
-                class="form-check-label"
-                for="estacionamiento"
-            >
-                Tiene estacionamiento
-            </label>
-        </div>
-
-        <button
-            type="submit"
-            class="btn btn-primary"
-        >
-            Guardar Propiedad
-        </button>
-
-    </form>
-
+    </div>
 </div>
+
+<!-- ================= VALIDACIONES ================= -->
+
+<script>
+$("#form_nueva_propiedad").validate({
+    rules: {
+        direccion: {
+            required: true,
+            minlength: 5
+        },
+        tipo: {
+            required: true
+        },
+        operacion: {
+            required: true
+        },
+        precio: {
+            required: true,
+            number: true,
+            min: 5000,
+            max: 1000000
+        },
+        foto: {
+            required: true,
+            extension: "jpg|jpeg|png"
+        }
+    },
+    messages: {
+        direccion: {
+            required: "La dirección es obligatoria",
+            minlength: "Debe tener al menos 5 caracteres"
+        },
+        tipo: {
+            required: "Seleccione el tipo de propiedad"
+        },
+        operacion: {
+            required: "Seleccione la operación"
+        },
+        precio: {
+            required: "El precio es obligatorio",
+            number: "Debe ser un número válido",
+            min: "El precio mínimo permitido es 5.000",
+            max: "El precio máximo permitido es 1.000.000"
+        },
+        foto: {
+            required: "Debe subir una imagen",
+            extension: "Solo se permiten imágenes JPG, JPEG o PNG"
+        }
+    }
+});
+</script>
+
+<!-- ================= FILEINPUT ================= -->
+
+<script>
+$(document).ready(function() {
+    $("#foto").fileinput({
+        language: "es",
+        allowedFileExtensions: ["jpg", "jpeg", "png"],
+        showUpload: false,
+        showCaption: true,
+        dropZoneEnabled: true,
+        browseLabel: 'Buscar',
+        removeLabel: 'Quitar'
+    });
+});
+</script>
 
 {% endblock %}

@@ -3,102 +3,147 @@
 
 {% block contenido %}
 
-<div class="container mt-4">
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
 
-    <h2 class="mb-4">
-        Editar Propiedad
-    </h2>
+        <div class="col-md-6">
+            <br>
 
-    <form
-        action="{% url 'actualizarPropiedad' %}"
-        method="POST"
-        enctype="multipart/form-data"
-    >
-        {% csrf_token %}
+            <h1><b>Editar Propiedad</b></h1>
+            <hr>
 
-        <!-- ID oculto -->
-        <input type="hidden" name="id" value="{{ propiedad.id }}">
-
-        <div class="mb-3">
-            <label>DIreccion</label>
-            <input
-                type="text"
-                class="form-control"
-                name="direccion"
-                value="{{ propiedad.direccion }}"
-                required
+            <form
+                enctype="multipart/form-data"
+                id="form_editar_propiedad"
+                action="{% url 'actualizarPropiedad' %}"
+                method="post"
             >
+                {% csrf_token %}
+
+                <!-- ID -->
+                <input type="hidden" name="id" value="{{ propiedad.id }}">
+
+                <b>Dirección:</b>
+                <input
+                    value="{{ propiedad.direccion }}"
+                    required
+                    class="form-control"
+                    type="text"
+                    name="direccion"
+                >
+                <br>
+
+                <b>Tipo:</b>
+                <select name="tipo" class="form-control" required>
+                    <option value="Casa" {% if propiedad.tipo == "Casa" %}selected{% endif %}>Casa</option>
+                    <option value="Departamento" {% if propiedad.tipo == "Departamento" %}selected{% endif %}>Departamento</option>
+                    <option value="Local" {% if propiedad.tipo == "Local" %}selected{% endif %}>Local</option>
+                </select>
+                <br>
+
+                <b>Operación:</b>
+                <select name="operacion" class="form-control" required>
+                    <option value="Renta" {% if propiedad.operacion == "Renta" %}selected{% endif %}>Renta</option>
+                    <option value="Venta" {% if propiedad.operacion == "Venta" %}selected{% endif %}>Venta</option>
+                </select>
+                <br>
+
+                <b>Precio:</b>
+                <input
+                    value="{{ propiedad.precio }}"
+                    required
+                    class="form-control"
+                    type="number"
+                    step="0.01"
+                    name="precio"
+                >
+                <br>
+
+                <b>Fotografía actual:</b>
+                <br>
+
+                {% if propiedad.foto %}
+                    <img src="{{ propiedad.foto.url }}" width="200" class="mb-2 rounded">
+                {% else %}
+                    <b>N/A</b>
+                {% endif %}
+
+                <br><br>
+
+                <b>Cambiar fotografía:</b>
+                <input type="file" name="foto" class="form-control" accept="image/*">
+                <br>
+
+                <b>Estacionamiento:</b>
+                <input
+                    type="checkbox"
+                    name="estacionamiento"
+                    {% if propiedad.estacionamiento %}checked{% endif %}
+                >
+                <br><br>
+
+                <button class="btn btn-success" type="submit">
+                    <i class="icon-save"></i> Actualizar
+                </button>
+
+                <a href="/listarPropiedades/" style="margin-left: 10px; text-decoration: underline;">
+                    <i class="icon-close"></i> Cancelar
+                </a>
+
+                <br><br>
+            </form>
         </div>
-
-        <div class="mb-3">
-            <label>Tipo</label>
-            <select class="form-control" name="tipo" required>
-                <option value="Casa" {% if propiedad.tipo == "Casa" %}selected{% endif %}>Casa</option>
-                <option value="Departamento" {% if propiedad.tipo == "Departamento" %}selected{% endif %}>Departamento</option>
-                <option value="Local" {% if propiedad.tipo == "Local" %}selected{% endif %}>Local</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label>Operación</label>
-            <select class="form-control" name="operacion" required>
-                <option value="Renta" {% if propiedad.operacion == "Renta" %}selected{% endif %}>Renta</option>
-                <option value="Venta" {% if propiedad.operacion == "Venta" %}selected{% endif %}>Venta</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label>Precio</label>
-            <input
-                type="number"
-                step="0.01"
-                class="form-control"
-                name="precio"
-                value="{{ propiedad.precio }}"
-                required
-            >
-        </div>
-
-        <div class="mb-3">
-            <label>Fotografía actual</label><br>
-
-            {% if propiedad.foto %}
-                <img src="{{ propiedad.foto.url }}" width="200" class="mb-2 rounded">
-            {% else %}
-                <p>No hay imagen</p>
-            {% endif %}
-        </div>
-
-        <div class="mb-3">
-            <label>Cambiar fotografía (opcional)</label>
-            <input
-                type="file"
-                class="form-control"
-                name="foto"
-                accept="image/*"
-            >
-        </div>
-
-        <div class="form-check mb-3">
-            <input
-                class="form-check-input"
-                type="checkbox"
-                name="estacionamiento"
-                id="estacionamiento"
-                {% if propiedad.estacionamiento %}checked{% endif %}
-            >
-
-            <label class="form-check-label" for="estacionamiento">
-                Tiene estacionamiento
-            </label>
-        </div>
-
-        <button type="submit" class="btn btn-primary">
-            Actualizar Propiedad
-        </button>
-
-    </form>
-
+    </div>
 </div>
+
+<!-- ================= VALIDACIONES ================= -->
+
+<script>
+$("#form_editar_propiedad").validate({
+    rules: {
+        direccion: {
+            required: true,
+            minlength: 5
+        },
+        tipo: {
+            required: true
+        },
+        operacion: {
+            required: true
+        },
+        precio: {
+            required: true,
+            number: true,
+            min: 5000,
+            max: 1000000
+        },
+        foto: {
+            extension: "jpg|jpeg|png"
+        }
+    },
+    messages: {
+        direccion: {
+            required: "La dirección es obligatoria",
+            minlength: "Debe tener al menos 5 caracteres"
+        },
+        tipo: {
+            required: "Seleccione el tipo de propiedad"
+        },
+        operacion: {
+            required: "Seleccione la operación"
+        },
+        precio: {
+            required: "El precio es obligatorio",
+            number: "Debe ser un número válido",
+            min: "El precio mínimo es 5.000",
+            max: "El precio máximo es 1.000.000"
+        },
+        foto: {
+            extension: "Solo se permiten imágenes JPG, JPEG o PNG"
+        }
+    }
+});
+</script>
 
 {% endblock %}
