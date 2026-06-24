@@ -4,67 +4,80 @@
 <div class="container-fluid">
     <br>
 
-    <h2><b>💰 Reporte de Ingresos por Rentas</b></h2>
+    <h2><b><i class="fas fa-hand-holding-usd"></i> Reporte de Ingresos por Rentas</b></h2>
     <hr>
 
-    <!-- ================= TARJETA TOTAL ================= -->
-    <div class="row">
+    <!-- BOTÓN CREAR -->
+    <a href="{% url 'crear_pago' %}" class="btn btn-success mb-3">
+        <i class="fas fa-plus-circle"></i> Registrar Pago
+    </a>
 
+    <p><b>DEBUG PAGOS:</b> {{ pagos|length }}</p>
+
+    <!-- TOTAL -->
+    <div class="row">
         <div class="col-xl-6 col-md-6 mb-4">
             <div class="card border-left-success shadow py-3">
                 <div class="card-body">
 
                     <div class="text-success font-weight-bold text-uppercase">
-                        Total Ingresos
+                        <i class="fas fa-coins"></i> Total Ingresos
                     </div>
 
                     <div class="h1 font-weight-bold text-gray-800">
                         ${{ total_ingresos }}
                     </div>
 
-                    <small class="text-muted">
-                        Suma total de pagos de rentas registrados
-                    </small>
-
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- ================= TABLA DETALLADA ================= -->
+    <!-- TABLA -->
     <div class="card shadow mb-4">
 
         <div class="card-header py-3">
-            <h5><b>📄 Detalle de Ingresos por Inquilino</b></h5>
+            <h5><b><i class="fas fa-table"></i> Detalle de Ingresos</b></h5>
         </div>
 
         <div class="card-body">
 
             <div class="table-responsive">
+
                 <table class="table table-bordered table-hover" id="tablaIngresos">
 
                     <thead class="thead-dark">
                         <tr>
-                            <th>Inquilino</th>
-                            <th>Propiedad</th>
-                            <th>Tipo</th>
-                            <th>Mes</th>
-                            <th>Fecha de Pago</th>
-                            <th>Monto</th>
+                            <th><i class="fas fa-user"></i> Inquilino</th>
+                            <th><i class="fas fa-home"></i> Propiedad</th>
+                            <th><i class="fas fa-building"></i> Tipo</th>
+                            <th><i class="fas fa-calendar-alt"></i> Mes de Pago</th>
+                            <th><i class="fas fa-money-bill-wave"></i> Monto</th>
+                            <th><i class="fas fa-trash"></i> Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
-
                         {% for p in pagos %}
                         <tr>
                             <td>{{ p.contrato.inquilino }}</td>
                             <td>{{ p.contrato.propiedad.direccion }}</td>
                             <td>{{ p.contrato.propiedad.tipo }}</td>
-                            <td>{{ p.mes_correspondiente|date:"M Y" }}</td>
-                            <td>{{ p.fecha_pago|date:"Y-m-d" }}</td>
+
+                            <td>
+                                <i class="fas fa-calendar-check"></i>
+                                {{ p.mes_correspondiente }}
+                            </td>
+
                             <td><b>$ {{ p.monto }}</b></td>
+
+                            <td>
+                                <button class="btn btn-danger btn-sm"
+                                        onclick="eliminarPago({{ p.id }})">
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                </button>
+                            </td>
+
                         </tr>
                         {% empty %}
                         <tr>
@@ -73,10 +86,10 @@
                             </td>
                         </tr>
                         {% endfor %}
-
                     </tbody>
 
                 </table>
+
             </div>
 
         </div>
@@ -84,15 +97,28 @@
 
 </div>
 
-<!-- ================= DATATABLE ================= -->
+<!-- SWEETALERT -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-$(document).ready(function () {
-    $('#tablaIngresos').DataTable({
-        language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+function eliminarPago(id) {
+
+    Swal.fire({
+        title: '¿Eliminar pago?',
+        text: "Esta acción no se puede deshacer",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "/pagos/eliminar/" + id + "/";
         }
     });
-});
+
+}
 </script>
 
 {% endblock %}

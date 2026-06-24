@@ -86,7 +86,7 @@ class PagoRenta(models.Model):
     contrato = models.ForeignKey(Contrato, on_delete=models.CASCADE, related_name='pagos')
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     fecha_pago = models.DateField(auto_now_add=True)
-    mes_correspondiente = models.DateField(help_text="Primer día del mes que cubre este pago")
+    mes_correspondiente = models.DateField()
     comprobante = models.FileField(upload_to='comprobantes/', blank=True, null=True)
 
     class Meta:

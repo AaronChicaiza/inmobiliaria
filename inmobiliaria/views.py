@@ -248,12 +248,18 @@ def contratosPorVencer(request):
     return render(request, 'contratosPorVencer.html', {'contratos': contratos})
 
 def reporte_ingresos(request):
-    total_ingresos = PagoRenta.objects.aggregate(total=Sum('monto'))['total'] or 0
-    pagos = PagoRenta.objects.all()
+    pagos = PagoRenta.objects.select_related(
+        'contrato',
+        'contrato__propiedad'
+    ).all()
+
+    total_ingresos = pagos.aggregate(
+        total=Sum('monto')
+    )['total'] or 0
 
     return render(request, 'reporteIngresos.html', {
-        'total_ingresos': total_ingresos,
-        'pagos': pagos
+        'pagos': pagos,
+        'total_ingresos': total_ingresos
     })
 
 
@@ -270,3 +276,35 @@ def reporte_ocupacion(request):
         'propiedades_rentadas': rentadas,
         'propiedades_vacias': vacias
     })
+
+
+
+def crear_pago(request):
+    contratos = Contrato.objects.all()
+
+    print("CONTRATOS:", contratos)  # 🔥 DEBUG
+
+    if request.method == "POST":
+        contrato_id = request.POST.get('contrato')
+        monto = request.POST.get('monto')
+        mes = request.POST.get('mes_correspondiente')
+
+        contrato = get_object_or_404(Contrato, id=contrato_id)
+
+        PagoRenta.objects.create(
+            contrato=contrato,
+            monto=monto,
+            mes_correspondiente=mes
+        )
+
+        messages.success(request, "Pago registrado correctamente")
+        return redirect('reporte_ingresos')
+
+    return render(request, 'crearPago.html', {
+        'contratos': contratos
+    })
+
+def eliminar_pago(request, id):
+    pago = get_object_or_404(PagoRenta, id=id)
+    pago.delete()
+    return redirect('reporte_ingresos')

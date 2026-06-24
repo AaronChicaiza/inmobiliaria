@@ -1,0 +1,107 @@
+{% extends "./plantillaPrincipal.html" %}
+{% load static %}
+
+{% block contenido %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+
+        <div class="col-md-6">
+            <br>
+
+            <h2><b>Registrar Pago de Renta</b></h2>
+            <hr>
+
+            <form id="form_pago_renta"
+                  action="{% url 'crear_pago' %}"
+                  method="POST">
+                {% csrf_token %}
+
+                <!-- CONTRATO -->
+                <b>Contrato:</b>
+                <select class="form-control" name="contrato" required>
+                    <option value="">Seleccione contrato</option>
+                    {% for c in contratos %}
+                        <option value="{{ c.id }}">
+                            {{ c.inquilino }} - {{ c.propiedad.direccion }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <br>
+
+                <!-- MONTO -->
+                <b>Monto:</b>
+                <input type="number"
+                       class="form-control"
+                       name="monto"
+                       step="0.01"
+                       min="1"
+                       required>
+                <br>
+
+                <!-- FECHA DEL PAGO (ANTES MES) -->
+                <b>Fecha del pago:</b>
+                <input type="date"
+                       class="form-control"
+                       name="mes_correspondiente"
+                       required>
+
+                <!-- EJEMPLO -->
+                <small class="text-muted">
+                    Ejemplo: 24/06/2026 (día / mes / año)
+                </small>
+
+                <br><br>
+
+                <!-- BOTONES -->
+                <button type="submit" class="btn btn-success">
+                    <i class="icon-check"></i> Guardar Pago
+                </button>
+
+                <a href="{% url 'reporte_ingresos' %}" class="btn btn-secondary">
+                    <i class="icon-close"></i> Cancelar
+                </a>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ================= VALIDACIONES ================= -->
+
+<script>
+$("#form_pago_renta").validate({
+    rules: {
+        contrato: {
+            required: true
+        },
+        monto: {
+            required: true,
+            number: true,
+            min: 1,
+            max: 100000
+        },
+        mes_correspondiente: {
+            required: true,
+            date: true
+        }
+    },
+    messages: {
+        contrato: {
+            required: "Seleccione un contrato"
+        },
+        monto: {
+            required: "Ingrese el monto",
+            number: "Debe ser un número válido",
+            min: "El monto mínimo es 1",
+            max: "El monto máximo es 100000"
+        },
+        mes_correspondiente: {
+            required: "Seleccione la fecha del pago"
+        }
+    }
+});
+</script>
+
+{% endblock %}
