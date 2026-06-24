@@ -1,0 +1,62 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+
+<div class="container-fluid">
+    <br>
+
+    <h2><b>🏠 Reporte de Ocupación de Propiedades</b></h2>
+    <hr>
+
+    <!-- ================= TARJETAS ================= -->
+    <div class="row">
+
+        <!-- PORCENTAJE -->
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-info shadow py-3">
+                <div class="card-body">
+
+                    <div class="text-info font-weight-bold text-uppercase">
+                        Porcentaje de Ocupación
+                    </div>
+
+                    <div class="h1 font-weight-bold text-gray-800">
+                        {{ porcentaje_ocupacion }}%
+                    </div>
+
+                    <small class="text-muted">
+                        Propiedades actualmente rentadas
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPLEMENTO VISUAL -->
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-secondary shadow py-3">
+                <div class="card-body">
+
+                    <div class="text-dark font-weight-bold text-uppercase">
+                        Estado del Inventario
+                    </div>
+
+                    <div class="h5 mt-2">
+
+                        🟢 Rentadas: {{ propiedades_rentadas|default:"-" }} <br>
+                        🔴 Vacías: {{ propiedades_vacias|default:"-" }}
+
+                    </div>
+
+                    <small class="text-muted">
+                        Distribución actual de propiedades
+                    </small>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

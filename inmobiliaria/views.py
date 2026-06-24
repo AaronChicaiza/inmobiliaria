@@ -247,22 +247,26 @@ def contratosPorVencer(request):
     contratos = Contrato.objects.filter(fecha_vencimiento__range=[hoy, fecha_limite])
     return render(request, 'contratosPorVencer.html', {'contratos': contratos})
 
-def reporte_ingresos_ocupacion(request):
-    # 1. Cálculo de Ingresos
-    total_ingresos = PagoRenta.objects.aggregate(Sum('monto'))['monto__sum'] or 0
-    
-    # 2. Cálculo de Ocupación
-    total_propiedades = Propiedad.objects.count()
-    rentadas = Propiedad.objects.filter(estado='rentada').count()
-    
-    porcentaje = 0
-    if total_propiedades > 0:
-        porcentaje = (rentadas / total_propiedades) * 100
-    
-    pagos = PagoRenta.objects.all().order_by('-fecha_pago')
+def reporte_ingresos(request):
+    total_ingresos = PagoRenta.objects.aggregate(total=Sum('monto'))['total'] or 0
+    pagos = PagoRenta.objects.all()
 
     return render(request, 'reporteIngresos.html', {
         'total_ingresos': total_ingresos,
-        'porcentaje_ocupacion': round(porcentaje, 1),
         'pagos': pagos
+    })
+
+
+def reporte_ocupacion(request):
+    total_propiedades = Propiedad.objects.count()
+    rentadas = Contrato.objects.values('propiedad').distinct().count()
+
+    vacias = total_propiedades - rentadas
+
+    porcentaje = (rentadas / total_propiedades * 100) if total_propiedades else 0
+
+    return render(request, 'reporteOcupacion.html', {
+        'porcentaje_ocupacion': round(porcentaje, 1),
+        'propiedades_rentadas': rentadas,
+        'propiedades_vacias': vacias
     })

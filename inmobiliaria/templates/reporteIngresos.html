@@ -1,57 +1,98 @@
 {% extends "./plantillaPrincipal.html" %}
 {% block contenido %}
+
 <div class="container-fluid">
-    <h1 class="h3 mb-4">Reporte Financiero y de Ocupación</h1>
+    <br>
 
+    <h2><b>💰 Reporte de Ingresos por Rentas</b></h2>
+    <hr>
+
+    <!-- ================= TARJETA TOTAL ================= -->
     <div class="row">
+
         <div class="col-xl-6 col-md-6 mb-4">
-            <div class="card border-left-success shadow py-2">
+            <div class="card border-left-success shadow py-3">
                 <div class="card-body">
-                    <div class="font-weight-bold text-success text-uppercase">Total Ingresos</div>
-                    <div class="h3 font-weight-bold text-gray-800">${{ total_ingresos }}</div>
+
+                    <div class="text-success font-weight-bold text-uppercase">
+                        Total Ingresos
+                    </div>
+
+                    <div class="h1 font-weight-bold text-gray-800">
+                        ${{ total_ingresos }}
+                    </div>
+
+                    <small class="text-muted">
+                        Suma total de pagos de rentas registrados
+                    </small>
+
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-6 col-md-6 mb-4">
-            <div class="card border-left-info shadow py-2">
-                <div class="card-body">
-                    <div class="font-weight-bold text-info text-uppercase">Ocupación</div>
-                    <div class="h3 font-weight-bold text-gray-800">{{ porcentaje_ocupacion }}%</div>
-                </div>
-            </div>
-        </div>
     </div>
 
+    <!-- ================= TABLA DETALLADA ================= -->
     <div class="card shadow mb-4">
+
+        <div class="card-header py-3">
+            <h5><b>📄 Detalle de Ingresos por Inquilino</b></h5>
+        </div>
+
         <div class="card-body">
-            <table class="table table-bordered" id="tablaPagos">
-                <thead>
-                    <tr>
-                        <th>Inquilino</th>
-                        <th>Mes</th>
-                        <th>Monto</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in pagos %}
-                    <tr>
-                        <td>{{ p.contrato.inquilino }}</td>
-                        <td>{{ p.mes_correspondiente|date:"M Y" }}</td>
-                        <td>${{ p.monto }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="tablaIngresos">
+
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Inquilino</th>
+                            <th>Propiedad</th>
+                            <th>Tipo</th>
+                            <th>Mes</th>
+                            <th>Fecha de Pago</th>
+                            <th>Monto</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for p in pagos %}
+                        <tr>
+                            <td>{{ p.contrato.inquilino }}</td>
+                            <td>{{ p.contrato.propiedad.direccion }}</td>
+                            <td>{{ p.contrato.propiedad.tipo }}</td>
+                            <td>{{ p.mes_correspondiente|date:"M Y" }}</td>
+                            <td>{{ p.fecha_pago|date:"Y-m-d" }}</td>
+                            <td><b>$ {{ p.monto }}</b></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">
+                                No hay pagos registrados
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+
         </div>
     </div>
+
 </div>
 
+<!-- ================= DATATABLE ================= -->
 <script>
-    $(document).ready(function() {
-        $('#tablaPagos').DataTable({
-            language: { url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json' }
-        });
+$(document).ready(function () {
+    $('#tablaIngresos').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+        }
     });
+});
 </script>
+
 {% endblock %}
