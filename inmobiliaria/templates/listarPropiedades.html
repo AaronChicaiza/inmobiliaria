@@ -6,74 +6,96 @@
 <div class="container pt-5 mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Listado de Propiedades</h2>
+        <h2><b>Listado de Propiedades</b></h2>
 
         <a href="{% url 'nuevaPropiedad' %}" class="btn btn-success">
-            + Nueva Propiedad
+            <i class="icon-plus-circle"></i>
+            Nueva Propiedad
         </a>
     </div>
 
     {% if propiedades %}
 
-    <div class="row">
+    <div class="table-responsive">
+        <table id="tbl_propiedades" class="table table-hover table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>FOTO</th>
+                    <th>TIPO</th>
+                    <th>OPERACIÓN</th>
+                    <th>DIRECCIÓN</th>
+                    <th>PRECIO</th>
+                    <th>ESTACIONAMIENTO</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
 
-        {% for propiedad in propiedades %}
+            <tbody>
+                {% for propiedad in propiedades %}
+                <tr>
 
-        <div class="col-md-4 mb-4">
+                    <td>{{ propiedad.id }}</td>
 
-            <div class="card shadow-sm">
-
-                {% if propiedad.foto %}
-                <img src="{{ propiedad.foto.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                {% else %}
-                <img src="{% static 'images/default.jpg' %}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                {% endif %}
-
-                <div class="card-body">
-
-                    <h5 class="card-title">
-                        {{ propiedad.tipo }} - {{ propiedad.operacion }}
-                    </h5>
-
-                    <p class="card-text">
-                        <strong>Dirección:</strong> {{ propiedad.direccion }} <br>
-                        <strong>Precio:</strong> ${{ propiedad.precio }} <br>
-
-                        {% if propiedad.estacionamiento %}
-                            🚗 Con estacionamiento
+                    <td class="text-center">
+                        {% if propiedad.foto %}
+                            <img src="{{ propiedad.foto.url }}"
+                                 alt="Foto"
+                                 width="120"
+                                 height="80"
+                                 style="object-fit: cover; border-radius: 5px;">
                         {% else %}
-                            🚫 Sin estacionamiento
+                            <img src="{% static 'images/default.jpg' %}"
+                                 alt="Sin foto"
+                                 width="120"
+                                 height="80"
+                                 style="object-fit: cover; border-radius: 5px;">
                         {% endif %}
-                    </p>
+                    </td>
 
-                    <div class="d-flex justify-content-between">
+                    <td>{{ propiedad.tipo }}</td>
 
-                        <a href="{% url 'editarPropiedad' propiedad.id %}" class="btn btn-primary btn-sm">
-                            Editar
+                    <td>{{ propiedad.operacion }}</td>
+
+                    <td>{{ propiedad.direccion }}</td>
+
+                    <td>${{ propiedad.precio }}</td>
+
+                    <td class="text-center">
+                        {% if propiedad.estacionamiento %}
+                            🚗 Sí
+                        {% else %}
+                            🚫 No
+                        {% endif %}
+                    </td>
+
+                    <td class="text-center">
+
+                        <a href="{% url 'editarPropiedad' propiedad.id %}"
+                           class="btn btn-outline-warning btn-sm">
+                            <i class="icon-edit"></i>
                         </a>
 
-                        <a href="#" 
-                            onclick="confirmDelete(event, this.href='{% url 'eliminarPropiedad' propiedad.id %}')"
-                            class="btn btn-danger btn-sm">
-                            Eliminar
+                        <a href="#"
+                           onclick="confirmDelete(event, '{% url 'eliminarPropiedad' propiedad.id %}')"
+                           class="btn btn-outline-danger btn-sm">
+                            <i class="icon-trash"></i>
                         </a>
-                    </div>
 
-                </div>
+                    </td>
 
-            </div>
+                </tr>
+                {% endfor %}
+            </tbody>
 
-        </div>
-
-        {% endfor %}
-
+        </table>
     </div>
 
     {% else %}
 
-        <div class="alert alert-info">
-            No hay propiedades registradas.
-        </div>
+    <div class="alert alert-info">
+        No hay propiedades registradas.
+    </div>
 
     {% endif %}
 
@@ -84,7 +106,7 @@ function confirmDelete(event, url) {
     event.preventDefault();
 
     Swal.fire({
-        title: "¿Estás seguro?",
+        title: "¿Está seguro?",
         text: "Esta acción no se puede deshacer",
         icon: "warning",
         showCancelButton: true,
@@ -98,6 +120,12 @@ function confirmDelete(event, url) {
         }
     });
 }
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    new DataTable('#tbl_propiedades');
+});
 </script>
 
 {% endblock %}
