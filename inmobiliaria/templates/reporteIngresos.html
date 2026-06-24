@@ -1,58 +1,57 @@
 {% extends "./plantillaPrincipal.html" %}
 {% block contenido %}
-
 <div class="container-fluid">
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h4 class="m-0 font-weight-bold text-primary">Reporte de Ingresos</h4>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="tablaIngresos" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Propiedad</th>
-                            <th>Inquilino</th>
-                            <th>Monto</th>
-                            <th>Fecha</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for i in ingresos %}
-                        <tr>
-                            <td>{{ i.id }}</td>
-                            <td>{{ i.contrato.propiedad.nombre }}</td>
-                            <td>{{ i.contrato.inquilino }}</td>
-                            <td>${{ i.monto }}</td>
-                            <td>{{ i.fecha_pago|date:"d/m/Y" }}</td>
-                            <td>
-                                {% if i.estado == 'Pagado' %}
-                                    <span class="badge badge-success">Pagado</span>
-                                {% else %}
-                                    <span class="badge badge-warning">Pendiente</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <h1 class="h3 mb-4">Reporte Financiero y de Ocupación</h1>
+
+    <div class="row">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-success shadow py-2">
+                <div class="card-body">
+                    <div class="font-weight-bold text-success text-uppercase">Total Ingresos</div>
+                    <div class="h3 font-weight-bold text-gray-800">${{ total_ingresos }}</div>
+                </div>
             </div>
+        </div>
+
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-info shadow py-2">
+                <div class="card-body">
+                    <div class="font-weight-bold text-info text-uppercase">Ocupación</div>
+                    <div class="h3 font-weight-bold text-gray-800">{{ porcentaje_ocupacion }}%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <table class="table table-bordered" id="tablaPagos">
+                <thead>
+                    <tr>
+                        <th>Inquilino</th>
+                        <th>Mes</th>
+                        <th>Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in pagos %}
+                    <tr>
+                        <td>{{ p.contrato.inquilino }}</td>
+                        <td>{{ p.mes_correspondiente|date:"M Y" }}</td>
+                        <td>${{ p.monto }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 <script>
     $(document).ready(function() {
-        $('#tablaIngresos').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
-            },
-            dom: 'Bfrtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+        $('#tablaPagos').DataTable({
+            language: { url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json' }
         });
     });
 </script>
-
 {% endblock %}

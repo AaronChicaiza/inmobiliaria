@@ -78,5 +78,21 @@ class Contrato(models.Model):
         return f"Contrato de {self.inquilino}"
     
 
-    
-    
+# --------------------------
+# INGRESOS (PAGOS DE RENTA)
+# --------------------------
+class PagoRenta(models.Model):
+    # Relación con el contrato
+    contrato = models.ForeignKey(Contrato, on_delete=models.CASCADE, related_name='pagos')
+    monto = models.DecimalField(max_digits=10, decimal_places=2)
+    fecha_pago = models.DateField(auto_now_add=True)
+    mes_correspondiente = models.DateField(help_text="Primer día del mes que cubre este pago")
+    comprobante = models.FileField(upload_to='comprobantes/', blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Pago de Renta"
+        verbose_name_plural = "Pagos de Rentas"
+        ordering = ['-fecha_pago']
+
+    def __str__(self):
+        return f"Pago {self.contrato.inquilino} - {self.monto}"

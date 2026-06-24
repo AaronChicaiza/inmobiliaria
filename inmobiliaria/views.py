@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from .models import Perfil, Propiedad, Contrato
+from .models import Perfil, Propiedad, Contrato, PagoRenta
 from datetime import date, timedelta
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 
 
 # -------------------------
@@ -245,3 +246,23 @@ def contratosPorVencer(request):
     fecha_limite = hoy + timedelta(days=30)
     contratos = Contrato.objects.filter(fecha_vencimiento__range=[hoy, fecha_limite])
     return render(request, 'contratosPorVencer.html', {'contratos': contratos})
+
+def reporte_ingresos_ocupacion(request):
+    # 1. Cálculo de Ingresos
+    total_ingresos = PagoRenta.objects.aggregate(Sum('monto'))['monto__sum'] or 0
+    
+    # 2. Cálculo de Ocupación
+    total_propiedades = Propiedad.objects.count()
+    rentadas = Propiedad.objects.filter(estado='rentada').count()
+    
+    porcentaje = 0
+    if total_propiedades > 0:
+        porcentaje = (rentadas / total_propiedades) * 100
+    
+    pagos = PagoRenta.objects.all().order_by('-fecha_pago')
+
+    return render(request, 'reporteIngresos.html', {
+        'total_ingresos': total_ingresos,
+        'porcentaje_ocupacion': round(porcentaje, 1),
+        'pagos': pagos
+    })
