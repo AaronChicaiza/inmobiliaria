@@ -35,6 +35,10 @@
                     <input value="{{ contrato.plazo_meses }}" required class="form-control" type="number" name="plazo_meses">
                     <br>
 
+                    <b>¿Requiere aval o fiador?</b>
+                    <input type="checkbox" name="requiere_aval" value="1">
+                    <br><br>
+
                     <b>Archivo Actual:</b>
                     <br>
                     {% if contrato.archivo_pdf %}

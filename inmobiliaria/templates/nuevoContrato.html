@@ -40,9 +40,12 @@
                 <br>
 
                 <b>Archivo PDF del Contrato:</b>
-                <input type="file" name="archivo_pdf" class="form-control" accept="application/pdf" required>
+                <input type="file" name="archivo_pdf" id="archivo_pdf" class="form-control" accept="application/pdf" required>
                 <br>
-
+                
+                <b>¿Requiere aval o fiador?</b>
+                <input type="checkbox" name="requiere_aval" value="1">
+                <br><br>
 
                 <button class="btn btn-success" type="submit">
                     <i class="icon-save"></i> Guardar Contrato
@@ -89,20 +92,17 @@
 </script>
 
 <script>
-    $(document).ready(function() {
-        $("#archivo_pdf").fileinput({
-            language: "es",
-            allowedFileExtensions: ["pdf"],
-            showCaption: false,
-            dropZoneEnabled: true,
-            showClose: false,
-            showUpload: false, // Esto oculta el botón de subida automática
-            browseLabel: 'Seleccionar...',
-            removeLabel: 'Quitar'
-        });
-        // Oculta el botón de carga si aparece
-        $(".fileinput-upload").hide();
+$(document).ready(function() {
+    $("#archivo_pdf").fileinput({
+        language: "es",
+        allowedFileExtensions: ["pdf"],
+        showCaption: true,       // Muestra el nombre del archivo al lado
+        dropZoneEnabled: true,  // ESTO ACTIVA EL ARRASTRAR Y SOLTAR
+        showUpload: false,      // Oculta el botón de subir
+        browseLabel: 'Buscar',
+        removeLabel: 'Quitar'
     });
+});
 </script>
 
 {% endblock %}

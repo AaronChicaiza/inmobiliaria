@@ -1,0 +1,58 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h4 class="m-0 font-weight-bold text-primary">Reporte de Ingresos</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="tablaIngresos" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Propiedad</th>
+                            <th>Inquilino</th>
+                            <th>Monto</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in ingresos %}
+                        <tr>
+                            <td>{{ i.id }}</td>
+                            <td>{{ i.contrato.propiedad.nombre }}</td>
+                            <td>{{ i.contrato.inquilino }}</td>
+                            <td>${{ i.monto }}</td>
+                            <td>{{ i.fecha_pago|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if i.estado == 'Pagado' %}
+                                    <span class="badge badge-success">Pagado</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Pendiente</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#tablaIngresos').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+            },
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+        });
+    });
+</script>
+
+{% endblock %}
