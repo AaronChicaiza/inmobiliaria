@@ -1,31 +1,102 @@
 {% extends "./plantillaPrincipal.html" %}
 {% block contenido %}
-<div class="container mt-4">
-    <h1><b>Contratos por Vencer (Próximos 30 días)</b></h1>
+
+<center>
+    <br>
+    <h1><b>Contratos por Vencer</b>
+    
+    <a href="/listarContratos/" class="btn btn-secondary">
+        <i class="icon-arrow-left"></i> Volver a Contratos
+    </a>
+    </h1>
     <hr>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Inquilino</th>
-                <th>Fecha Vencimiento</th>
-                <th>Propiedad</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for c in contratos %}
-            <tr class="table-warning">
-                <td>{{ c.inquilino }}</td>
-                <td><b>{{ c.fecha_vencimiento }}</b></td>
-                <td>{{ c.propiedad.titulo }}</td>
-                <td>
-                    <a href="/editarContrato/{{c.id}}" class="btn btn-sm btn-warning">Gestionar</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="4" class="text-center">No hay contratos por vencer pronto.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+</center>
+
+<br>
+
+<div class="row">
+    <div class="col-md-1"></div>
+
+    <div class="col-md-10">
+        <table id="tbl_contratos" class="table table-hover table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>INQUILINO</th>
+                    <th>PROPIEDAD</th>
+                    <th>F. FIRMA</th>
+                    <th>F. VENCIMIENTO</th>
+                    <th>PDF</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                 {% for contrato in contratos %}
+                <tr>
+                    <td>{{contrato.id}}</td>
+                    <td>{{contrato.inquilino}}</td>
+                    <td>{{contrato.propiedad.titulo}}</td>
+                    <td>{{contrato.fecha_firma}}</td>
+                    <td>{{contrato.fecha_vencimiento}}</td>
+                    <td class="text-center">
+                        {% if contrato.archivo_pdf %}
+                            <a href="{{ contrato.archivo_pdf.url }}" target="_blank" class="btn btn-outline-info">
+                                <i class="icon-file-pdf"></i> PDF
+                            </a>
+                        {% else %}
+                            <b>N/A</b>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="/editarContrato/{{contrato.id}}" class="btn btn-outline-warning" title="Editar Contrato">
+                            <i class="icon-edit"></i>
+                        </a>
+                        <a href="/eliminarContrato/{{contrato.id}}"
+                        title="Eliminar Contrato"
+                        onclick="confirmarEliminacion(event, this.href)"
+                        class="btn btn-outline-danger">
+                            <i class="icon-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+function confirmarEliminacion(event, url){
+    event.preventDefault();
+
+    Swal.fire({
+        title: "¿Está seguro de eliminar este contrato?",
+        text: "No podrá revertir esta acción",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: "Eliminado",
+                text: "El contrato ha sido eliminado correctamente",
+                icon: "success"
+            }).then(() => {
+                window.location.href = url;
+            });
+        }
+    });
+}
+</script>
+
+<script>
+    // Inicializar DataTable
+    let table = new DataTable('#tbl_contratos');
+</script>
 {% endblock %}

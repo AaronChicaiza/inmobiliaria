@@ -14,7 +14,7 @@
                 <select name="propiedad_id" class="form-control" required>
                     <option value="">Seleccione una propiedad...</option>
                     {% for p in propiedades %}
-                        <option value="{{ p.id }}">{{ p.titulo }}</option>
+                        <option value="{{ p.id }}">{{ p.tipo }} - {{ p.operacion }}</option>
                     {% endfor %}
                 </select>
                 <br>
@@ -43,11 +43,6 @@
                 <input type="file" name="archivo_pdf" class="form-control" accept="application/pdf" required>
                 <br>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="aval_requerido" id="aval_requerido">
-                    <label class="form-check-label" for="aval_requerido">¿Requiere Aval?</label>
-                </div>
-                <br>
 
                 <button class="btn btn-success" type="submit">
                     <i class="icon-save"></i> Guardar Contrato
@@ -61,6 +56,7 @@
     </div>
 </div>
 
+
 <script>
     $("#form_nuevo_contrato").validate({
         rules: {
@@ -69,12 +65,44 @@
             fecha_firma: { required: true },
             fecha_vencimiento: { required: true },
             plazo_meses: { required: true, min: 1 },
-            archivo_pdf: { required: true }
+            archivo_pdf: { required: true, extension: "pdf" }
         },
         messages: {
-            inquilino: { minlength: "El nombre es demasiado corto" },
-            plazo_meses: { min: "El plazo debe ser al menos 1 mes" }
+            // Aquí personalizas cada mensaje de error
+            propiedad_id: { required: "Por favor, seleccione una propiedad" },
+            inquilino: { 
+                required: "El nombre del inquilino es obligatorio",
+                minlength: "El nombre es demasiado corto" 
+            },
+            fecha_firma: { required: "La fecha de firma es obligatoria" },
+            fecha_vencimiento: { required: "La fecha de vencimiento es obligatoria" },
+            plazo_meses: { 
+                required: "Ingrese el plazo en meses",
+                min: "El plazo debe ser al menos 1 mes" 
+            },
+            archivo_pdf: { 
+                required: "Debe subir un archivo PDF",
+                extension: "Solo se permiten archivos en formato PDF"
+            }
         }
     });
 </script>
+
+<script>
+    $(document).ready(function() {
+        $("#archivo_pdf").fileinput({
+            language: "es",
+            allowedFileExtensions: ["pdf"],
+            showCaption: false,
+            dropZoneEnabled: true,
+            showClose: false,
+            showUpload: false, // Esto oculta el botón de subida automática
+            browseLabel: 'Seleccionar...',
+            removeLabel: 'Quitar'
+        });
+        // Oculta el botón de carga si aparece
+        $(".fileinput-upload").hide();
+    });
+</script>
+
 {% endblock %}

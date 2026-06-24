@@ -18,6 +18,22 @@
     <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
     <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+   <!-- 1. jQuery primero (la base de todo) -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+
+<!-- 2. Bootstrap (depende de jQuery) -->
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+<!-- 3. DataTables y Validate (ambos dependen de jQuery) -->
+<script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
+
+<!-- 4. SweetAlert y Main (opcional) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'js/main.js' %}"></script>
+
 </head>
 
 <body>
@@ -31,7 +47,7 @@
                             <div class="icon mr-2 d-flex justify-content-center align-items-center">
                                 <span class="icon-phone2"></span>
                             </div>
-                            <span class="text">+593 99 999 9999</span>
+                            <span class="text">+593 992 514 730</span>
                         </div>
 
                         <div class="col-md pr-4 d-flex topper align-items-center">
@@ -131,10 +147,8 @@
         <div class="ftco-footer-widget mb-4 ml-md-4">
           <h2 class="ftco-heading-2">Propiedades</h2>
           <ul class="list-unstyled">
-            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Ver propiedades</a></li>
-            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Registrar propiedad</a></li>
-            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Propiedades en renta</a></li>
-            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Propiedades en venta</a></li>
+            <li><a href="/listarPropiedades/"><span class="icon-long-arrow-right mr-2"></span>Ver propiedades</a></li>
+            <li><a href="/nuevaPropiedad/"><span class="icon-long-arrow-right mr-2"></span>Registrar propiedad</a></li>
           </ul>
         </div>
       </div>
@@ -144,9 +158,8 @@
         <div class="ftco-footer-widget mb-4 ml-md-4">
           <h2 class="ftco-heading-2">Contratos</h2>
           <ul class="list-unstyled">
-            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Registrar contrato</a></li>
-            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Contratos activos</a></li>
-            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Contratos por vencer</a></li>
+            <li><a href="/nuevoContrato/"><span class="icon-long-arrow-right mr-2"></span>Registrar contrato</a></li>
+            <li><a href="/contratosPorVencer/"><span class="icon-long-arrow-right mr-2"></span>Contratos por vencer</a></li>
           </ul>
         </div>
       </div>
@@ -156,8 +169,6 @@
         <div class="ftco-footer-widget mb-4">
           <h2 class="ftco-heading-2">Sistema</h2>
           <ul class="list-unstyled">
-            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Perfil de usuario</a></li>
-            <li><a href="#"><span class="icon-long-arrow-right mr-2"></span>Panel {% if rol %}{{ rol }}{% endif %}</a></li>
             <li><a href="/logout/"><span class="icon-long-arrow-right mr-2"></span>Cerrar sesión</a></li>
           </ul>
         </div>
@@ -176,13 +187,13 @@
               <li>
                 <a href="#">
                   <span class="icon icon-phone"></span>
-                  <span class="text">+593 999 999 999</span>
+                  <span class="text">+593 979 005 752</span>
                 </a>
               </li>
               <li>
                 <a href="#">
                   <span class="icon icon-envelope pr-4"></span>
-                  <span class="text">inmobiliaria@email.com</span>
+                  <span class="text">aaron.chicaiza1416@utc.edu.ec</span>
                 </a>
               </li>
             </ul>
@@ -220,10 +231,6 @@
     <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
     <script src="{% static 'js/scrollax.min.js' %}"></script>
 
-    <!-- Si tienes este archivo -->
-    <script src="{% static 'js/google-map.js' %}"></script>
-
-    <script src="{% static 'js/main.js' %}"></script>
 
  <!-- Importando SweetAlert2-->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -239,6 +246,21 @@
         </script>
     {% endfor %}
 {% endif %}
+
+<style>
+    label.error {
+        color: #ff0000 !important;
+        font-weight: bold !important;
+        font-size: 0.85rem !important;
+        margin-top: 5px !important;
+        display: block !important;
+    }
+    
+    /* Esto agrega el borde rojo al input cuando falla */
+    input.error, select.error {
+        border: 2px solid #ff0000 !important;
+    }
+</style>
 
 </body>
 </html>

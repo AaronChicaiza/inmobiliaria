@@ -7,16 +7,14 @@
                 <br>
                 <h1><b>Actualizar Contrato</b></h1>
                 <hr>
-                <form enctype="multipart/form-data" id="form_editar_contrato" action="/actualizarContrato/" method="post">
+                <form enctype="multipart/form-data" id="form_nuevo_contrato" action="/actualizarContrato/" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="id" value="{{ contrato.id }}">
                     
                     <b>Propiedad:</b>
                     <select name="propiedad_id" class="form-control" required>
                         {% for p in propiedades %}
-                            <option value="{{ p.id }}" {% if p.id == contrato.propiedad.id %}selected{% endif %}>
-                                {{ p.titulo }}
-                            </option>
+                            <option value="{{ p.id }}">{{ p.tipo }} - {{ p.operacion }}</option>
                         {% endfor %}
                     </select>
                     <br>
@@ -36,10 +34,6 @@
                     <b>Plazo (meses):</b>
                     <input value="{{ contrato.plazo_meses }}" required class="form-control" type="number" name="plazo_meses">
                     <br>
-
-                    <b>¿Requiere Aval?</b>
-                    <input type="checkbox" name="aval_requerido" {% if contrato.aval_requerido %}checked{% endif %}>
-                    <br><br>
 
                     <b>Archivo Actual:</b>
                     <br>
@@ -66,15 +60,33 @@
     </div>
 
     <script>
-        $("#form_editar_contrato").validate({
-            rules:{
-                inquilino: { required: true, minlength: 3 },
-                plazo_meses: { required: true, min: 1 }
+    $("#form_nuevo_contrato").validate({
+        rules: {
+            propiedad_id: { required: true },
+            inquilino: { required: true, minlength: 3 },
+            fecha_firma: { required: true },
+            fecha_vencimiento: { required: true },
+            plazo_meses: { required: true, min: 1 },
+            archivo_pdf: { required: true, extension: "pdf" }
+        },
+        messages: {
+            // Aquí personalizas cada mensaje de error
+            propiedad_id: { required: "Por favor, seleccione una propiedad" },
+            inquilino: { 
+                required: "El nombre del inquilino es obligatorio",
+                minlength: "El nombre es demasiado corto" 
             },
-            messages:{
-                inquilino: { required: "Ingrese el nombre del inquilino" },
-                plazo_meses: { min: "El plazo debe ser mayor a 0" }
+            fecha_firma: { required: "La fecha de firma es obligatoria" },
+            fecha_vencimiento: { required: "La fecha de vencimiento es obligatoria" },
+            plazo_meses: { 
+                required: "Ingrese el plazo en meses",
+                min: "El plazo debe ser al menos 1 mes" 
+            },
+            archivo_pdf: { 
+                required: "Debe subir un archivo PDF",
+                extension: "Solo se permiten archivos en formato PDF"
             }
-        });
-    </script>
+        }
+    });
+</script>
 {% endblock %}

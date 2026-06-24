@@ -156,81 +156,92 @@ def eliminarPropiedad(request, id):
 @login_required
 def listarContratos(request):
     contratos = Contrato.objects.all()
-    return render(
-        request, 
-        'listarContratos.html', 
-        {'contratos': contratos}
-    )
+    return render(request, 'listarContratos.html', {'contratos': contratos})
 
 @login_required
 def nuevoContrato(request):
     propiedades = Propiedad.objects.all()
-    return render(
-        request, 
-        'nuevoContrato.html', 
-        {'propiedades': propiedades}
-    )
+    return render(request, 'nuevoContrato.html', {'propiedades': propiedades})
 
 @login_required
 def guardarContrato(request):
-    propiedad = Propiedad.objects.get(id=request.POST['propiedad_id'])
-    
-    Contrato.objects.create(
-        propiedad=propiedad,
-        inquilino=request.POST['inquilino'],
-        archivo_pdf=request.FILES.get('archivo_pdf'),
-        fecha_firma=request.POST['fecha_firma'],
-        fecha_vencimiento=request.POST['fecha_vencimiento'],
-        plazo_meses=request.POST['plazo_meses'],
-        aval_requerido='aval_requerido' in request.POST,
-        creado_por=request.user
-    )
-    
-    return redirect('listarContratos')
+    if request.method == 'POST':
+        archivo = request.FILES.get('archivo_pdf')
+        
+        # Validación de seguridad: solo PDF
+        if archivo and not archivo.name.lower().endswith('.pdf'):
+            messages.error(request, "Error: Solo se permiten archivos en formato PDF.")
+            return redirect('nuevoContrato')
+
+        propiedad = get_object_or_404(Propiedad, id=request.POST.get('propiedad_id'))
+        
+        Contrato.objects.create(
+            propiedad=propiedad,
+            inquilino=request.POST.get('inquilino'),
+            archivo_pdf=archivo,
+            fecha_firma=request.POST.get('fecha_firma'),
+            fecha_vencimiento=request.POST.get('fecha_vencimiento'),
+            plazo_meses=request.POST.get('plazo_meses'),
+            aval_requerido='aval_requerido' in request.POST,
+            creado_por=request.user
+        )
+        
+        messages.success(request, "Contrato registrado con éxito.")
+        return redirect('listarContratos')
 
 @login_required
 def editarContrato(request, id):
-    contrato = Contrato.objects.get(id=id)
+    contrato = get_object_or_404(Contrato, id=id)
     propiedades = Propiedad.objects.all()
-    return render(
-        request, 
-        'editarContrato.html', 
-        {'contrato': contrato, 'propiedades': propiedades}
-    )
+    return render(request, 'editarContrato.html', {'contrato': contrato, 'propiedades': propiedades})
 
 @login_required
 def actualizarContrato(request):
-    contrato = Contrato.objects.get(id=request.POST['id'])
-    
-    contrato.propiedad = Propiedad.objects.get(id=request.POST['propiedad_id'])
-    contrato.inquilino = request.POST['inquilino']
-    contrato.fecha_firma = request.POST['fecha_firma']
-    contrato.fecha_vencimiento = request.POST['fecha_vencimiento']
-    contrato.plazo_meses = request.POST['plazo_meses']
-    contrato.aval_requerido = 'aval_requerido' in request.POST
-    
-    archivo = request.FILES.get('archivo_pdf')
-    if archivo:
-        contrato.archivo_pdf = archivo
+    if request.method == 'POST':
+        contrato = get_object_or_404(Contrato, id=request.POST.get('id'))
+        archivo = request.FILES.get('archivo_pdf')
+
+        # Validación de formato PDF
+        if archivo and not archivo.name.lower().endswith('.pdf'):
+            messages.error(request, "Error: Solo se permiten archivos PDF.")
+            return redirect('editarContrato', id=contrato.id)
         
-    contrato.save()
-    return redirect('listarContratos')
+        # Actualización de datos básicos
+        contrato.propiedad = get_object_or_404(Propiedad, id=request.POST.get('propiedad_id'))
+        contrato.inquilino = request.POST.get('inquilino')
+        contrato.fecha_firma = request.POST.get('fecha_firma')
+        contrato.fecha_vencimiento = request.POST.get('fecha_vencimiento')
+        contrato.plazo_meses = request.POST.get('plazo_meses')
+        contrato.aval_requerido = 'aval_requerido' in request.POST
+        
+        # Lógica de reemplazo de archivo PDF
+        if archivo:
+            # Si ya existía un archivo, lo eliminamos físicamente primero
+            if contrato.archivo_pdf:
+                contrato.archivo_pdf.delete(save=False)
+            
+            # Asignamos el nuevo archivo
+            contrato.archivo_pdf = archivo
+            
+        contrato.save()
+        messages.success(request, "Contrato actualizado correctamente.")
+        return redirect('listarContratos')
 
 @login_required
 def eliminarContrato(request, id):
-    contrato = Contrato.objects.get(id=id)
+    contrato = get_object_or_404(Contrato, id=id)
+    
+    # Eliminación física del archivo PDF antes de borrar el registro
+    if contrato.archivo_pdf:
+        contrato.archivo_pdf.delete(save=False)
+        
     contrato.delete()
+    messages.success(request, "Contrato eliminado correctamente.")
     return redirect('listarContratos')
 
 @login_required
 def contratosPorVencer(request):
-    # Definimos hoy y la fecha límite (dentro de 30 días)
     hoy = date.today()
     fecha_limite = hoy + timedelta(days=30)
-    
-    # Filtramos: fecha_vencimiento debe estar entre hoy y la fecha_limite
-    contratos = Contrato.objects.filter(
-        fecha_vencimiento__range=[hoy, fecha_limite]
-    )
-    
+    contratos = Contrato.objects.filter(fecha_vencimiento__range=[hoy, fecha_limite])
     return render(request, 'contratosPorVencer.html', {'contratos': contratos})
