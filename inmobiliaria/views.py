@@ -65,7 +65,7 @@ def inicio(request):
         "contratos": contratos,
     }
 
-    # 🔥 SOLO ADMIN VE ESTADÍSTICAS
+    #  SOLO ADMIN VE ESTADÍSTICAS
     if perfil.rol == "admin":
         context["total_propiedades"] = propiedades.count()
         context["total_contratos"] = contratos.count()
@@ -282,7 +282,7 @@ def reporte_ocupacion(request):
 def crear_pago(request):
     contratos = Contrato.objects.all()
 
-    print("CONTRATOS:", contratos)  # 🔥 DEBUG
+    print("CONTRATOS:", contratos)  
 
     if request.method == "POST":
         contrato_id = request.POST.get('contrato')
